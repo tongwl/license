@@ -99,7 +99,10 @@
                   </el-form-item>
 
                   <el-form-item label="安装ID:" prop="installedID">
-                    <el-input v-model="licenseInfo.installedID"  placeholder="请输入安装ID"></el-input>
+                    <input type="file" id="upload-installed-id" name="dashupload" class="hide" @change="uploadInstalledID($event)"/>
+                    <el-input v-model="licenseInfo.installedID" class="upload-installedID-label"  placeholder="请输入安装ID">
+                      <label title="导入安装ID" slot="append" for="upload-installed-id"><i class="el-icon-upload"></i></label>
+                    </el-input>
                   </el-form-item>
 
                   <el-form-item label="授权天数:" prop="licenseDays">
@@ -219,6 +222,38 @@
           licenseDays: null,
           clusterSize: null
         };
+      },
+      uploadInstalledID(evt) {
+        if (!(window.File && window.FileReader && window.FileList && window.Blob)) {
+          this.$notify.error({
+            title: "error",
+            message: this.$createElement('span', {style: 'color: teal'}, '您使用的浏览器并不支持文件上传，请手动输入授权码！'),
+            position: 'bottom-right'
+          });
+          return;
+        }
+        const file = evt.target['files'][0];
+        let me = this;
+        const readerOnload = () => {
+          return e => {
+            let dash;
+            try {
+              dash = JSON.parse(e.target.result);
+              me.licenseInfo.installedID = dash['installedID'];
+            } catch (err) {
+              me.$notify.error({
+                title: "error",
+                message: this.$createElement('span', {style: 'color: teal'}, '解析异常，请选择有效的文件！'),
+                position: 'bottom-right'
+              });
+              return;
+            }
+          };
+        };
+        const reader = new FileReader();
+        reader.onload = readerOnload();
+        reader.readAsText(file);
+        document.getElementById("upload-installed-id").innerText = "";
       },
       openCreateLicenseDialog() {
         this.editDialogVisible = true;
@@ -441,17 +476,11 @@
     }
 
     .license-container {
-      .editor-container{
-        .el-form-item__content {
-          margin-left: 20px !important;
-        }
-        .code{
-          height: 600px;
-          .cm-s-monokai.CodeMirror{
-            height: 100%;
-          }
-          .CodeMirror-linenumber, .CodeMirror-line {
-            line-height: 20px;
+      .upload-installedID-label {
+        label {
+          &:hover {
+            cursor: pointer;
+            opacity: .6;
           }
         }
       }
@@ -579,6 +608,10 @@
     display: block;
     word-break: break-all;
     width: 300px;
+  }
+
+  .hide {
+    display: none;
   }
 
 </style>
