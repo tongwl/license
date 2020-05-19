@@ -33,3 +33,11 @@ npm run build
 * 运行上述命令后会产生一个dist文件夹，将该文件夹部署在服务器上，将入口文件指定为dist文件夹下的index.html即可。
 * **如若使用dist文件夹拿去部署，那么请再dist/host.json配置api service host。**
 
+### nodes
+
+linux离线安装nginx教程：
+
+[https://github.com/tongwl/nginx_learning/tree/master/linux_nginx/linux%E7%A6%BB%E7%BA%BF%E5%AE%89%E8%A3%85nginx%E6%95%99%E7%A8%8B](https://github.com/tongwl/nginx_learning/tree/master/linux_nginx/linux离线安装nginx教程)
+
+
+
